@@ -6,16 +6,28 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2021",
+    "target": "ESNext",                // Altere para ESNext
     "sourceMap": true,
+    "sourceRoot": "./src",
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
-    "skipLibCheck": true,
+    "skipLibCheck": true,              // Adicionando para ignorar as verificações das bibliotecas
     "strictNullChecks": false,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
-  }
+    "noFallthroughCasesInSwitch": false,
+    "moduleResolution": "node",       // Altere para compatibilidade com Node.js
+    "esModuleInterop": true,          // Garantir compatibilidade com ESM
+    "skipDefaultLibCheck": true,      // Melhorar a verificação de tipos
+    "resolveJsonModule": true,        // Permitir importação de arquivos JSON
+    "lib": ["es2021", "dom"]          // Adicionando bibliotecas modernas (ES2021 e DOM)
+  },
+  "include": [
+    "src/**/*.ts"                      // Garantir que todos os arquivos TypeScript na pasta src sejam incluídos
+  ],
+  "exclude": [
+    "node_modules"                     // Excluir node_modules
+  ]
 }
