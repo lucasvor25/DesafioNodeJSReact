@@ -10,7 +10,6 @@ export class TasksController {
     @Get('getItem')
     @UseGuards(JwtAuthGuard)
     async findAll(@Request() req): Promise<Task[]> {
-        console.log("teste")
         return this.taskService.findAll(req.user.id);
     }
 

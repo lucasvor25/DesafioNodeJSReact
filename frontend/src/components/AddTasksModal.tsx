@@ -44,8 +44,12 @@ const TaskModal: React.FC<TaskModalProps> = ({
     };
 
     const onSubmit = () => {
-        handleSubmit(task);
+        if (task.title.trim() && task.description.trim()) {
+            handleSubmit(task);
+        }
     };
+
+    const isFormValid = task.title.trim() !== '' && task.description.trim() !== '';
 
     return (
         <Dialog open={open} onClose={handleClose}>
@@ -75,7 +79,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
                 <Button onClick={handleClose} disabled={isLoading}>
                     Cancelar
                 </Button>
-                <Button onClick={onSubmit} disabled={isLoading}>
+                <Button onClick={onSubmit} disabled={!isFormValid || isLoading}>
                     {isLoading ? <CircularProgress size={24} /> : 'Salvar'}
                 </Button>
             </DialogActions>

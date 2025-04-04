@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, TextField, Container, CircularProgress, Typography } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -12,8 +12,9 @@ export default function Login() {
     const mutation = useMutation({
         mutationFn: () => signIn(username, password),
         onSuccess: (data) => {
-            const token = data.access_token;
+            const token = data.accessToken;
             localStorage.setItem("token", token);
+            localStorage.setItem('username', username)
             navigate('/task');
         },
         onError: (error: any) => {
