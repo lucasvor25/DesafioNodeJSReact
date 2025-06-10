@@ -1,0 +1,121 @@
+version: "3.8"
+
+services:
+  backend:
+    build: ./backend
+    container_name: backend
+    ports:
+      - "3000:3000"
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - db
+    environment:
+      - DB_TYPE=postgres
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=vor12345
+      - DB_NAME=todolist
+    networks:
+      - app-network
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "3001:80"
+    depends_on:
+      - backend
+    environment:
+      - REACT_APP_API_BASE_URL=/api
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
+    volumes:
+      - ./frontend/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./frontend/build:/usr/share/nginx/html:ro
+    networks:
+      - app-network
+
+  db:
+    image: postgres:15
+    container_name: db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: todolist
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: vor12345
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+
+
+# version: "3.8"  # sempre bom ter a versão explícita
+
+# services:
+#   backend:
+#     build: ./backend
+#     ports:
+#       - "3000:3000"
+#     working_dir: /app
+#     volumes:
+#       - ./backend:/app
+#       # Se quiser evitar volumes para não sobrescrever node_modules ou build, remova esse volume.
+#       # Mas se precisa de hot reload, deixa assim.
+#     depends_on:
+#       - db
+#     environment:
+#       - DB_TYPE=postgres
+#       - DB_HOST=db              # usar o nome do serviço db na rede docker
+#       - DB_PORT=5432
+#       - DB_USERNAME=postgres
+#       - DB_PASSWORD=vor12345
+#       - DB_NAME=todolist
+
+#   frontend:
+#     build: ./frontend
+#     ports:
+#       - "3001:80"
+#     working_dir: /app
+#     volumes:
+#       - ./frontend:/app
+#       # Aqui também, cuidado com volumes: se tiver hot reload no React, é bom manter.
+#       # Se não, pode tirar para rodar só o build.
+#     environment:
+#       - REACT_APP_API_BASE_URL=http://backend:3000
+#       # variável para seu frontend saber onde está o backend dentro do docker network
+
+#   db:
+#     image: postgres:15
+#     restart: always
+#     ports:
+#       - "5432:5432"
+#     environment:
+#       POSTGRES_DB: todolist
+#       POSTGRES_USER: postgres
+#       POSTGRES_PASSWORD: vor12345
+#     volumes:
+#       - postgres_data:/var/lib/postgresql/data
+
+# volumes:
+#   postgres_data:
