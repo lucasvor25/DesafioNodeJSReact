@@ -10,11 +10,27 @@ export const signUp = async (username: string, password: string) => {
         const { data } = await api.post('/auth/signup', { username, password });
         return data;
     } catch (err: any) {
-        if (err.response && err.response.status === 409) {
+        const status = err.response?.status;
+        const message = err.response?.data?.message;
+
+        if (status === 409) {
             throw new Error('Usuário já cadastrado');
-        } else {
-            throw new Error('Erro ao cadastrar. Tente novamente.');
         }
+
+        if (status === 400 && Array.isArray(message)) {
+
+            const isSenhaInvalida = message.some((msg: string) =>
+                msg.toLowerCase().includes('senha')
+            );
+
+            if (isSenhaInvalida) {
+                throw new Error(
+                    'A senha deve ter pelo menos 8 caracteres, uma letra maiúscula, um número e um símbolo especial.'
+                );
+            }
+        }
+
+        throw new Error('Erro ao cadastrar. Tente novamente.');
     }
 };
 
