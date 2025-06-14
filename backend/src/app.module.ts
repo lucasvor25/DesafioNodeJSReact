@@ -11,21 +11,35 @@ import { Task } from './tasks/tasks.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRootAsync({
-      useFactory: async () => ({
+    TTypeOrmModule.forRootAsync({
+  useFactory: () => {
+    if (process.env.DATABASE_URL) {
+      return {
         type: 'postgres',
-        host: process.env.DB_HOST,
-        port: parseInt(process.env.DB_PORT || '5432', 10),
-        username: process.env.DB_USERNAME,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_NAME,
+        url: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false },
         entities: [User, Task],
         migrations: ['dist/db/migrations/*.js'],
         synchronize: false,
         migrationsRun: true,
-        ssl: { rejectUnauthorized: false }
-      })
-    }),
+      };
+    }
+
+    return {
+      type: 'postgres',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT || '5432', 10),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      ssl: false,
+      entities: [User, Task],
+      migrations: ['dist/db/migrations/*.js'],
+      synchronize: false,
+      migrationsRun: true,
+    };
+  }
+}),
     AuthModule,
     UsersModule,
     TaskModule,
