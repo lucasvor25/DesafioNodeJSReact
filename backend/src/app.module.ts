@@ -21,7 +21,9 @@ import { Task } from './tasks/tasks.entity';
         database: process.env.DB_NAME,
         entities: [User, Task],
         migrations: ['dist/db/migrations/*.js'],
-        synchronize: false
+        synchronize: false,
+        migrationsRun: true,
+        ssl: { rejectUnauthorized: false }
       })
     }),
     AuthModule,
