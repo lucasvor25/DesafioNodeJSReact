@@ -11,7 +11,7 @@ import { Task } from './tasks/tasks.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    TTypeOrmModule.forRootAsync({
+    TypeOrmModule.forRootAsync({
   useFactory: () => {
     if (process.env.DATABASE_URL) {
       return {
