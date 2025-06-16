@@ -43,4 +43,9 @@ export class AuthController {
     logout(): { message: string } {
         return { message: 'Logout realizado com sucesso' };
     }
+
+    @Get('/healthz')
+    health(): string {
+        return 'OK';
+    }
 }
