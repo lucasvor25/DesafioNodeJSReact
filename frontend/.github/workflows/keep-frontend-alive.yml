@@ -1,0 +1,17 @@
+name: 🌀 Keep Frontend Alive
+
+on:
+  schedule:
+    - cron: '*/14 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🌐 Ping Render Frontend
+        run: |
+          curl -s -o /dev/null -w "%{http_code}" $PING_FRONTEND
+        env:
+          PING_FRONTEND: ${{ secrets.PING_FRONTEND }}
