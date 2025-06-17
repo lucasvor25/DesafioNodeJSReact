@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Button, TextField, Container, CircularProgress, Typography } from '@mui/material';
+import { Button, TextField, Container, CircularProgress, Typography, InputAdornment, IconButton } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { signIn } from '../api/service';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 export default function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
     const mutation = useMutation({
@@ -27,6 +29,10 @@ export default function Login() {
         mutation.mutate();
     };
 
+    const togglePasswordVisibility = () => {
+        setShowPassword((prev) => !prev);
+    };
+
     return (
         <Container maxWidth="xs">
             <Typography variant="h4" align="center" gutterBottom>
@@ -43,12 +49,21 @@ export default function Login() {
                 />
                 <TextField
                     label="Senha"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     fullWidth
                     disabled={mutation.isPending}
                     margin="normal"
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton onClick={togglePasswordVisibility} edge="end">
+                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
                 />
                 <Button type="submit" variant="contained" disabled={mutation.isPending} fullWidth>
                     {mutation.isPending ? <CircularProgress size={24} /> : 'Entrar'}

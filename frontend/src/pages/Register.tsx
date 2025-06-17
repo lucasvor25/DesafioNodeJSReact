@@ -7,17 +7,30 @@ import {
     Typography,
     List,
     ListItem,
+    InputAdornment,
+    IconButton,
 } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { signUp } from '../api/service';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 export default function Register() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmedPassword, setShowConfirmedPassword] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
     const navigate = useNavigate();
+
+    const togglePasswordVisibility = () => {
+        setShowPassword((prev) => !prev);
+    };
+
+    const toggleConfirmedPasswordVisibility = () => {
+        setShowConfirmedPassword((prev) => !prev);
+    };
 
     const mutation = useMutation({
         mutationFn: () => signUp(username, password),
@@ -75,19 +88,37 @@ export default function Register() {
                 />
                 <TextField
                     label="Senha"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     fullWidth
                     margin="normal"
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton onClick={togglePasswordVisibility} edge="end">
+                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
                 />
                 <TextField
                     label="Confirme a Senha"
-                    type="password"
+                    type={showConfirmedPassword ? 'text' : 'password'}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     fullWidth
                     margin="normal"
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton onClick={toggleConfirmedPasswordVisibility} edge="end">
+                                    {showConfirmedPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
                 />
                 <Button type="submit" variant="contained" disabled={mutation.isPending} fullWidth>
                     {mutation.isPending ? <CircularProgress size={24} /> : 'Criar Conta'}
