@@ -26,6 +26,7 @@ const TaskPage: React.FC = () => {
     const [confirmDialog, setConfirmDialog] = useState<{ open: boolean; task: Task | null }>({ open: false, task: null });
 
     const userName = localStorage.getItem('username') || 'Usuário';
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -50,6 +51,7 @@ const TaskPage: React.FC = () => {
     const { data: tasks, isLoading, isError } = useQuery<Task[]>({
         queryKey: ['tasks'],
         queryFn: getTasks,
+        enabled: !!token
     });
 
     const addMutation = useMutation({

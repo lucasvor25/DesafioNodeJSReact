@@ -39,20 +39,23 @@ export default function Register() {
             navigate('/login');
         },
         onError: (error: any) => {
-            const status = error.response?.status;
-            const message = error.response?.data?.message;
 
-            if (status === 400 && Array.isArray(message)) {
-                setErrorMessages(message);
-            } else if (status === 409) {
-                setErrorMessages(['Usuário já cadastrado']);
+            const message = error.message;
+            console.log('error122', error)
+            if (message) {
+                setErrorMessages([message]);
             } else {
                 setErrorMessages(['Erro ao criar conta. Tente novamente.']);
             }
         },
     });
 
-    const strongPasswordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
+    const strongPasswordRegex = new RegExp(
+        '^(?=.*[A-Z])' +
+        '(?=.*\\d)' +
+        '(?=.*[!@#$%^&*()_+\\-=\\[\\]{};:\'"\\\\|,.<>/?])' +
+        '.{8,}$'
+    );
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
