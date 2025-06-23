@@ -8,7 +8,7 @@ export class TasksController {
     constructor(private readonly taskService: TasksService) { }
 
     @Get('getItem')
-    // @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard)
     async findAll(@Request() req): Promise<Task[]> {
         return this.taskService.findAll(req.user.id);
     }
