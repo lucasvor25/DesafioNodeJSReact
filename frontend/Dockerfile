@@ -12,4 +12,4 @@ FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
 COPY ./nginx/default.conf.template /etc/nginx/templates/default.conf.template
 
-CMD ["sh", "-c", "envsubst < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "envsubst '${REACT_APP_API_BASE_URL}' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
